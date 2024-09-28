@@ -1,0 +1,259 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f4f4f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  background-color: white;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  flex-grow: 1;
+  text-align: center;
+}
+
+#login-button {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#login-button:hover {
+  background-color: darkblue;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.user-photo {
+  width: 150px;
+  height: 150px;
+  background-color: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.user-details {
+  flex-grow: 1;
+  padding-left: 20px;
+}
+
+.about-us {
+  background-color: #e0f7e0;
+  padding: 20px;
+  border-radius: 8px;
+  margin-left: 20px;
+  flex-grow: 1;
+}
+
+.travel-sections {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.travel-section {
+  width: 30%;
+  text-align: center;
+}
+
+.travel-section button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.travel-section button:hover {
+  background-color: #45a049;
+}
+
+.places-visited {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.places-carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.place {
+  min-width: 300px;
+  height: 200px;
+  background-color: #ddd;
+  margin: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.5s ease;
+}
+
+.carousel-nav {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+#prev-place {
+  left: 10px;
+}
+
+#next-place {
+  right: 10px;
+}
+
+.carousel-nav:hover {
+  background-color: #45a049;
+}
+
+footer {
+  text-align: center;
+  margin-top: 20px;
+  background-color: #f0f0f0; /* New background color */
+  padding: 10px;
+}
+
+footer a {
+  color: #4CAF50;
+  text-decoration: none;
+  font-size: 20px; /* Increased font size */
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+.login-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#login-form, #signup-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#login-form h2, #signup-form h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#login-form input, #signup-form input {
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 16px;
+}
+
+#login-form button, #signup-form button {
+  background-color: blue;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#login-form button:hover, #signup-form button:hover {
+  background-color: darkblue;
+}
+
+#login-form p, #signup-form p {
+  text-align: center;
+  margin-top: 15px;
+}
+
+#login-form a, #signup-form a {
+  color: blue;
+  text-decoration: none;
+}
+
+#login-form a:hover, #signup-form a:hover {
+  text-decoration: underline;
+}
+
+.past-travels {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.past-travels ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.past-travels li {
+  margin: 10px 0;
+}
+
+.past-travels a {
+  color: #4CAF50;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+.past-travels a:hover {
+  text-decoration: underline;
+}
+
+.expense-chart canvas {
+  max-width: 80%; /* Adjusted size */
+  max-height: 80%; /* Adjusted size */
+  margin: 0 auto;
+  display: block;
+}
