@@ -3,19 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up - TRIPTRACKER</title>
+  <title>Sign Up</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="login-container">
+  <div class="container">
+    <h1>Sign Up</h1>
     <form id="signup-form">
-      <h2>Sign Up</h2>
-      <input type="email" id="email" placeholder="Email ID" required>
-      <input type="password" id="password" placeholder="Enter Password" required>
-      <input type="password" id="confirm-password" placeholder="Confirm Password" required>
-      <button type="submit">SIGN UP</button>
-      <p>Already have an account? <a href="login.html">Log in</a></p>
+      <label for="signup-email">EMAIL:</label>
+      <input type="email" id="signup-email" name="signup-email" required>
+      
+      <label for="signup-password">Password:</label>
+      <input type="password" id="signup-password" name="signup-password" required>
+
+      <label for="signup-name">Name:</label>
+      <input type="text" id="signup-name" name="signup-name" required>
+      
+      <label for="signup-occupation">Occupation:</label>
+      <input type="text" id="signup-occupation" name="signup-occupation" required>
+      
+      <label for="signup-gender">Gender:</label>
+      <select id="signup-gender" name="signup-gender" required>
+        <option value="">Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      
+      <button type="submit">Sign Up</button>
     </form>
+    <footer>
+      <p>© 2024 TRIPTRACKER. All rights reserved.</p>
+      <a href="https://github.com/Romit-programmer/IIC-TMSL-hackathon-2024-RPR">Contact Us</a>
+    </footer>
   </div>
   <script src="script.js"></script>
 </body>
