@@ -1,84 +1,66 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const loginButton = document.getElementById('login-button');
-  const loginForm = document.getElementById('login-form');
   const signupForm = document.getElementById('signup-form');
-  const viewReportButton = document.getElementById('view-report');
-  const prevPlaceButton = document.getElementById('prev-place');
-  const nextPlaceButton = document.getElementById('next-place');
+  const signupButton = document.getElementById('signup-button');
+  const loginForm = document.getElementById('login-form');
+  const addExpenseButton = document.getElementById('add-expense-button');
   const places = document.querySelectorAll('.place');
   let currentPlaceIndex = 0;
 
-  if (loginButton) {
-    loginButton.addEventListener('click', () => {
-      window.location.href = 'login.html';
+  // Redirect to signup page
+  if (signupButton) {
+    signupButton.addEventListener('click', () => {
+      window.location.href = 'signup.html';
     });
   }
 
-  if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      // Perform login validation here
-      window.location.href = 'index.html';
+  // Redirect to add expense page
+  if (addExpenseButton) {
+    addExpenseButton.addEventListener('click', () => {
+      window.location.href = 'add-expense.html';
     });
+  }
+
+  // Check if user is logged in
+  function isLoggedIn() {
+    return !!localStorage.getItem('token');
+  }
+
+  // Prompt login if not authenticated
+  function requireAuth(callback) {
+    if (!isLoggedIn()) {
+      alert('Please log in to access this feature.');
+      console.log('User not logged in, redirecting to login page.');
+      window.location.href = 'login.html';
+    } else {
+      console.log('User is logged in, proceeding to callback.');
+      callback();
+    }
   }
 
   if (signupForm) {
     signupForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      // Perform signup validation here
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const name = document.getElementById('signup-name').value;
+      const occupation = document.getElementById('signup-occupation').value;
+      const gender = document.getElementById('signup-gender').value;
+
+      const userData = {
+        email,
+        password,
+        name,
+        occupation,
+        gender
+      };
+
+      localStorage.setItem('user', JSON.stringify(userData));
       window.location.href = 'index.html';
     });
   }
 
-  if (viewReportButton) {
-    viewReportButton.addEventListener('click', () => {
-      window.location.href = 'past-travels.html';
-    });
-  }
-
-  if (prevPlaceButton && nextPlaceButton) {
-    prevPlaceButton.addEventListener('click', () => {
-      showPlace(currentPlaceIndex - 1);
-    });
-
-    nextPlaceButton.addEventListener('click', () => {
-      showPlace(currentPlaceIndex + 1);
-    });
-  }
-
-  function showPlace(index) {
-    if (index < 0) {
-      currentPlaceIndex = places.length - 1;
-    } else if (index >= places.length) {
-      currentPlaceIndex = 0;
-    } else {
-      currentPlaceIndex = index;
-    }
-
-    places.forEach((place, i) => {
-      place.style.transform = `translateX(${(i - currentPlaceIndex) * 100}%)`;
-    });
-  }
-
-  showPlace(currentPlaceIndex);
-
-  const expenses = [];
   const expenseList = document.getElementById('expense-list');
   const expenseChartCtx = document.getElementById('expense-chart')?.getContext('2d');
-
-  // Function to add expense
-  document.getElementById('add-expense')?.addEventListener('click', () => {
-    const amount = prompt('Enter amount:');
-    const category = prompt('Enter category (e.g., accommodation, food, transportation):');
-    const date = prompt('Enter date (YYYY-MM-DD):');
-
-    if (amount && category && date) {
-      const expense = { amount: parseFloat(amount), category, date };
-      expenses.push(expense);
-      updateExpenseList();
-      updateExpenseChart();
-    }
-  });
 
   // Function to update expense list
   function updateExpenseList() {
@@ -86,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       expenseList.innerHTML = '';
       expenses.forEach((expense) => {
         const li = document.createElement('li');
-        li.textContent = `${expense.date} - ${expense.category}: ₹${expense.amount.toFixed(2)}`;
+        li.textContent = `${expense.expenseDate} - ${expense.expenseCategory}: ₹${expense.moneySpent.toFixed(2)}`;
         expenseList.appendChild(li);
       });
     }
@@ -95,19 +77,15 @@ document.addEventListener('DOMContentLoaded', () => {
   // Function to update expense chart
   function updateExpenseChart() {
     if (expenseChartCtx) {
-      const categories = ['Accommodation', 'Food & Drinks', 'Transportation', 'Entertainment & Activities', 'Miscellaneous'];
-      const categoryTotals = categories.map(category => {
-        return expenses
-          .filter(expense => expense.category === category)
-          .reduce((sum, expense) => sum + expense.amount, 0);
-      });
+      const categories = expenses.map(expense => expense.expenseCategory);
+      const amounts = expenses.map(expense => expense.moneySpent);
 
       new Chart(expenseChartCtx, {
         type: 'pie',
         data: {
           labels: categories,
           datasets: [{
-            data: categoryTotals,
+            data: amounts,
             backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
           }]
         }
@@ -117,93 +95,146 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // New code for add-expense.html
   const expenseForm = document.getElementById('expense-form');
+  const expenseTableBody = document.getElementById('expense-table').querySelector('tbody');
+  const totalExpenseElement = document.getElementById('total-expense');
+  const displayBudgetElement = document.getElementById('display-budget');
+  const finishTallyButton = document.getElementById('finish-tally-button');
+  const exportPdfButton = document.getElementById('export-pdf-button');
+  const expenseCategoryChartCtx = document.getElementById('expense-category-chart').getContext('2d');
+  const budgetCoverageChartCtx = document.getElementById('budget-coverage-chart').getContext('2d');
+  const budgetExceededElement = document.getElementById('budget-exceeded');
+  let totalExpense = 0;
+  let expenseCount = 0;
+  const expenses =[];
 
   if (expenseForm) {
     expenseForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const travelPlace = document.getElementById('travel-place').value;
-      const totalMoney = parseFloat(document.getElementById('total-money').value);
+      const moneySpent = parseFloat(document.getElementById('money-spent').value);
       const expenseDate = document.getElementById('expense-date').value;
       const expenseCategory = document.getElementById('expense-category').value;
+      const budget = parseFloat(document.getElementById('budget').value);
 
-      const expense = { travelPlace, totalMoney, expenseDate, expenseCategory };
+      const expense = { travelPlace, moneySpent, expenseDate, expenseCategory };
       expenses.push(expense);
-      updateExpenseChart();
+      addExpenseToTable(expense);
+      totalExpense += moneySpent;
+      totalExpenseElement.textContent = totalExpense.toFixed(2);
+      displayBudgetElement.textContent = budget.toFixed(2);
+
+      resetForm();
     });
   }
 
-  // New code for new-trip.html
-  const tripForm = document.getElementById('trip-form');
+  function addExpenseToTable(expense) {
+    expenseCount++;
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${expenseCount}</td>
+      <td>${expense.travelPlace}</td>
+      <td>₹${expense.moneySpent.toFixed(2)}</td>
+      <td>${expense.expenseDate}</td>
+      <td>${expense.expenseCategory}</td>
+    `;
+    expenseTableBody.appendChild(row);
+  }
 
-  if (tripForm) {
-    tripForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const startingLocation = document.getElementById('starting-location').value;
-      const destinationPlace = document.getElementById('destination-place').value;
-      const tripStartDate = document.getElementById('trip-start-date').value;
-      const tripEndDate = document.getElementById('trip-end-date').value;
+  function resetForm() {
+    const budgetValue = document.getElementById('budget').value; // Store the budget value
+    expenseForm.reset();
+    document.getElementById('budget').value = budgetValue; // Restore the budget value
+  }
 
-      // Transfer data to present travel section
-      // Assuming you have elements to display this data in the present travel section
-      document.getElementById('present-starting-location').textContent = startingLocation;
-      document.getElementById('present-destination-place').textContent = destinationPlace;
-      document.getElementById('present-trip-start-date').textContent = tripStartDate;
-      document.getElementById('present-trip-end-date').textContent = tripEndDate;
+  if (finishTallyButton) {
+    finishTallyButton.addEventListener('click', () => {
+      const budget = parseFloat(document.getElementById('budget').value);
+      if (totalExpense > budget) {
+        budgetExceededElement.style.display = 'block';
+        document.getElementById('budget-coverage-chart').style.display = 'none';
+      } else {
+        budgetExceededElement.style.display = 'none';
+        document.getElementById('budget-coverage-chart').style.display = 'block';
+        generateCharts();
+      }
     });
   }
 
-  // New code for trip-details.html
-  const urlParams = new URLSearchParams(window.location.search);
-  const destination = urlParams.get('destination');
-  const destinationNameElement = document.getElementById('destination-name');
-  const expenseListElement = document.getElementById('expense-list');
-  const totalMoneyElement = document.getElementById('total-money');
-  const expenseChartCtxDetails = document.getElementById('expense-chart')?.getContext('2d');
+  function generateCharts() {
+    const categories = expenses.map(expense => expense.expenseCategory);
+    const amounts = expenses.map(expense => expense.moneySpent);
 
-  if (destination) {
-    destinationNameElement.textContent = destination;
-  }
-
-  // Sample data for expenses
-  const tripExpenses = [
-    { category: 'Accommodation', amount: 500 },
-    { category: 'Food', amount: 200 },
-    { category: 'Transportation', amount: 150 },
-    { category: 'Miscellaneous', amount: 100 }
-  ];
-
-  // Function to update expense list
-  function updateTripExpenseList() {
-    let totalMoney = 0;
-    expenseListElement.innerHTML = '';
-    tripExpenses.forEach((expense) => {
-      const li = document.createElement('li');
-      li.textContent = `${expense.category}: ₹${expense.amount.toFixed(2)}`;
-      expenseListElement.appendChild(li);
-      totalMoney += expense.amount;
+    new Chart(expenseCategoryChartCtx, {
+      type: 'pie',
+      data: {
+        labels: categories,
+        datasets: [{
+          data: amounts,
+          backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+        }]
+      }
     });
-    totalMoneyElement.textContent = `₹${totalMoney.toFixed(2)}`;
+
+    const budget = parseFloat(document.getElementById('budget').value);
+    new Chart(budgetCoverageChartCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Total Expense', 'Remaining Budget'],
+        datasets: [{
+          data: [totalExpense, budget - totalExpense],
+          backgroundColor: ['#FF6384', '#36A2EB']
+        }]
+      }
+    });
   }
 
-  // Function to update expense chart
-  function updateTripExpenseChart() {
-    if (expenseChartCtxDetails) {
-      const categories = tripExpenses.map(expense => expense.category);
-      const amounts = tripExpenses.map(expense => expense.amount);
+  if (exportPdfButton) {
+    exportPdfButton.addEventListener('click', () => {
+      console.log('Export to PDF button clicked');
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      // Add "By TripTracker" title
+      doc.setFontSize(22);
+      doc.setTextColor(0, 102, 204); // Set color to a shade of blue
+      doc.text('By TripTracker', 105, 20, null, null, 'center'); // Centered text
 
-      new Chart(expenseChartCtxDetails, {
-        type: 'pie',
-        data: {
-          labels: categories,
-          datasets: [{
-            data: amounts,
-            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
-          }]
-        }
+      // Check if user details elements exist
+      const userNameElement = document.getElementById('user-name');
+      const userEmailElement = document.getElementById('user-email');
+      const userOccupationElement = document.getElementById('user-occupation');
+      const userGenderElement = document.getElementById('user-gender');
+
+      if (userNameElement && userEmailElement && userOccupationElement && userGenderElement) {
+        // Capture user details with better formatting
+        const userDetails = `
+          Name: ${userNameElement.textContent}
+          Email: ${userEmailElement.textContent}
+          Occupation: ${userOccupationElement.textContent}
+          Gender: ${userGenderElement.textContent}
+        `;
+
+        const lines = doc.splitTextToSize(userDetails, 180);
+        doc.text(lines, 10, 10);
+      } else {
+        console.error('User details elements not found');
+      }
+
+      // Capture table
+      html2canvas(document.querySelector('#expense-table')).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        doc.addImage(imgData, 'PNG', 10, 40, 190, 60);
+
+        // Capture charts
+        html2canvas(document.querySelector('#charts-container')).then(canvas => {
+          const imgData = canvas.toDataURL('image/png');
+          doc.addPage();
+          doc.addImage(imgData, 'PNG', 10, 10, 190, 100);
+
+          // Save the PDF
+          doc.save('expense_report.pdf'); // This line triggers the download
+          console.log('PDF saved');
+        });
       });
-    }
+    });
   }
-
-  updateTripExpenseList();
-  updateTripExpenseChart();
 });
