@@ -10,21 +10,33 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
+  position: relative;
 }
 
-body {
-  background-color: #f4f4f9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+body::before {
+  content: "";
+  background-image: url('./assets/pexels-photo-1450360.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
 
 .container {
-  background-color: white;
+  background-color: rgba(224, 247, 224, 0.4);
   padding: 20px;
   width: 100%;
   height: 100%;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
 }
 
 header {
@@ -39,7 +51,7 @@ header h1 {
   text-align: center;
 }
 
-#login-button {
+#signup-button {
   background-color: blue;
   color: white;
   border: none;
@@ -48,8 +60,27 @@ header h1 {
   cursor: pointer;
 }
 
-#login-button:hover {
+#signup-button:hover {
   background-color: darkblue;
+}
+
+.add-expense {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#add-expense-button {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+#add-expense-button:hover {
+  background-color: darkgreen;
 }
 
 .user-info {
@@ -66,45 +97,24 @@ header h1 {
   justify-content: center;
   align-items: center;
   border-radius: 50%;
+  background-image: url('./assets/assets2.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 .user-details {
   flex-grow: 1;
   padding-left: 20px;
+  font-size: 1.5em;
+  font-family: 'Georgia', serif;
 }
 
 .about-us {
-  background-color: #e0f7e0;
+  background-color: rgba(224, 247, 224, 0.6);
   padding: 20px;
   border-radius: 8px;
   margin-left: 20px;
   flex-grow: 1;
-}
-
-.travel-sections {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 40px;
-}
-
-.travel-section {
-  width: 30%;
-  text-align: center;
-}
-
-.travel-section button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.travel-section button:hover {
-  background-color: #45a049;
 }
 
 .places-visited {
@@ -114,60 +124,50 @@ header h1 {
 
 .places-carousel {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   width: 100%;
   overflow: hidden;
   position: relative;
+  margin-top: 20px;
 }
 
 .place {
-  min-width: 300px;
-  height: 200px;
-  background-color: #ddd;
+  width: 30%;
+  background-color: rgba(255, 255, 255, 0.4);
   margin: 0 10px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   transition: transform 0.5s ease;
+  overflow: hidden; /* Ensure content does not overflow */
 }
 
-.carousel-nav {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
+.place-image {
+  width: 100%;
+  height: auto;
+  max-height: 150px; /* Ensure the image does not exceed the designated space */
+  object-fit: cover; /* Ensure the image covers the space without distortion */
+  margin-bottom: 10px;
+}
+
+.place-description {
+  text-align: center;
   padding: 10px;
-  border-radius: 5px;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1;
-}
-
-#prev-place {
-  left: 10px;
-}
-
-#next-place {
-  right: 10px;
-}
-
-.carousel-nav:hover {
-  background-color: #45a049;
 }
 
 footer {
   text-align: center;
   margin-top: 20px;
-  background-color: #f0f0f0; /* New background color */
+  background-color: rgba(255, 255, 255, 0.4);
   padding: 10px;
 }
 
 footer a {
   color: #4CAF50;
   text-decoration: none;
-  font-size: 20px; /* Increased font size */
+  font-size: 20px;
 }
 
 footer a:hover {
@@ -185,11 +185,6 @@ footer a:hover {
 #login-form, #signup-form {
   display: flex;
   flex-direction: column;
-}
-
-#login-form h2, #signup-form h2 {
-  margin-bottom: 20px;
-  text-align: center;
 }
 
 #login-form input, #signup-form input {
@@ -227,33 +222,124 @@ footer a:hover {
   text-decoration: underline;
 }
 
-.past-travels {
-  margin-top: 40px;
+.expense-form-section {
+  margin-bottom: 20px;
+}
+
+.expense-form-section form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.expense-form-section label {
+  font-weight: bold;
+}
+
+.expense-form-section input, .expense-form-section select, .expense-form-section button {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.expense-form-section button {
+  background-color: green;
+  color: white;
+  cursor: pointer;
+}
+
+.expense-form-section button:hover {
+  background-color: darkgreen;
+}
+
+.expense-table-section {
+  margin-top: 20px;
+}
+
+.expense-table-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.expense-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.expense-table-container th, .expense-table-container td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.expense-table-container th {
+  background-color: #f4f4f4;
+}
+
+.total-expense {
+  text-align: right;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+#finish-tally-button {
+  background-color: orange;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2em;
+  margin-top: 20px;
+}
+
+#finish-tally-button:hover {
+  background-color: darkorange;
+}
+
+#export-pdf-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2em;
+  margin-top: 20px;
+}
+
+#export-pdf-button:hover {
+  background-color: darkred;
+}
+
+#charts-container {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  margin-top: 20px;
+  gap: 5px; 
+}
+
+#charts-container canvas {
+  width: 10%;
+  max-width: 250px;
+  height: auto;
+  max-height: 250px;
+  margin: 0 -10px; /* Add horizontal margin to reduce the gap */
+}
+
+#budget-exceeded {
+  color: red;
+  font-size: 2em;
+  font-weight: bold;
   text-align: center;
+  margin-top: 20px;
+  display: none;
 }
 
-.past-travels ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.past-travels li {
-  margin: 10px 0;
-}
-
-.past-travels a {
-  color: #4CAF50;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-.past-travels a:hover {
-  text-decoration: underline;
-}
-
-.expense-chart canvas {
-  max-width: 80%; /* Adjusted size */
-  max-height: 80%; /* Adjusted size */
-  margin: 0 auto;
-  display: block;
+.hidden {
+  display: none;
 }
