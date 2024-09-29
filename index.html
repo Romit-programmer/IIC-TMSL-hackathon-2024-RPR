@@ -6,55 +6,43 @@
   <title>TRIPTRACKER</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>TRIPTRACKER</h1>
-      <button id="login-button">LOG IN</button>
+      <h1>⠀⠀⠀⠀TRIPTRACKER</h1>
+      <button id="signup-button">SIGN UP</button>
     </header>
+    <section class="add-expense">
+      <button id="add-expense-button">Add Expense</button>
+    </section>
     <section class="user-info">
-      <div class="user-photo">PHOTO OF USER</div>
+      <div class="user-photo"></div>
       <div class="user-details">
         <p>NAME: <span id="user-name">John Doe</span></p>
         <p>EMAIL: <span id="user-email">john.doe@example.com</span></p>
         <p>OCCUPATION: <span id="user-occupation">Traveler</span></p>
-      </div>
-    </section>
-    <section class="travel-sections">
-      <div class="travel-section">
-        <h2>PAST TRAVELS</h2>
-        <button id="view-report">VIEW REPORT</button>
-      </div>
-      <div class="travel-section">
-        <h2>PRESENT TRAVELS</h2>
-        <a href="add-expense.html"><button id="add-expense">+ADD EXPENSE</button></a>
-      </div>
-      <div class="travel-section">
-        <h2>FUTURE TRAVELS</h2>
-        <a href="new-trip.html"><button id="new-trip">NEW TRIP</button></a>
+        <p>GENDER: <span id="user-gender">Male</span></p>
       </div>
     </section>
     <section class="places-visited">
-      <h2>PLACES YOU HAVE BEEN...</h2>
+      <h2>WHAT OUR WEBSITE OFFERS...</h2>
       <div class="places-carousel">
-        <button class="carousel-nav" id="prev-place"><-</button>
-        <div class="place" id="place1">IMG OF PAST PLACE 1</div>
-        <div class="place" id="place2">IMG OF PAST PLACE 2</div>
-        <div class="place" id="place3">IMG OF PAST PLACE 3</div>
-        <div class="place" id="place4">IMG OF PAST PLACE 4</div>
-        <div class="place" id="place5">IMG OF PAST PLACE 5</div>
-        <div class="place" id="place6">IMG OF PAST PLACE 6</div>
-        <div class="place" id="place7">IMG OF PAST PLACE 7</div>
-        <div class="place" id="place8">IMG OF PAST PLACE 8</div>
-        <div class="place" id="place9">IMG OF PAST PLACE 9</div>
-        <div class="place" id="place10">IMG OF PAST PLACE 10</div>
-        <div class="place" id="place11">IMG OF PAST PLACE 11</div>
-        <div class="place" id="place12">IMG OF PAST PLACE 12</div>
-        <div class="place" id="place13">IMG OF PAST PLACE 13</div>
-        <div class="place" id="place14">IMG OF PAST PLACE 14</div>
-        <div class="place" id="place15">IMG OF PAST PLACE 15</div>
-        <button class="carousel-nav" id="next-place">-></button>
+        <div class="place" id="place1">
+          <img src="./assets/asset4.jpg" alt="Past Place 1" class="place-image">
+          <div class="place-description">Make budgets for your trips and keep a track of your expenses</div>
+        </div>
+        <div class="place" id="place2">
+          <img src="./assets/asset5.png" alt="Past Place 2" class="place-image">
+          <div class="place-description">Easy visualisations for better understanding of budget and expense</div>
+        </div>
+        <div class="place" id="place3">
+          <img src="./assets/asset6.jpg" alt="Past Place 3" class="place-image">
+          <div class="place-description">Export your expenses in pdf format for tax purposes</div>
+        </div>
+        
       </div>
     </section>
     <section class="about-us">
@@ -66,7 +54,8 @@
       <p>Join us on this exciting journey and let TRIPTRACKER be your trusted partner in all your travel adventures. Happy travels! 🌍✈️</p>
     </section>
     <footer>
-      <p><a href="https://github.com/Romit-programmer/IIC-TMSL-hackathon-2024-RPR" target="_blank">CONTACT US</a></p>
+      <p>© 2024 TRIPTRACKER. All rights reserved.</p>
+      <a href="https://github.com/Romit-programmer/IIC-TMSL-hackathon-2024-RPR">Contact Us</a>
     </footer>
   </div>
   <script src="script.js"></script>
