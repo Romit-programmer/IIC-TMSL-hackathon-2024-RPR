@@ -1,3 +1,49 @@
+document.addEventListener('DOMContentLoaded', function() {
+  // Theme switcher functionality
+  function initializeTheme() {
+    const themeToggle = document.getElementById('theme-toggle');
+    if (!themeToggle) return;
+
+    // Set initial theme from localStorage or default to 'light'
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    console.log('Initial theme:', currentTheme); // Debug log
+
+    themeToggle.addEventListener('click', function() {
+      // Toggle theme
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+      // Apply new theme
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      console.log('Theme switched to:', newTheme); // Debug log
+
+      // Update charts if they exist
+      updateChartsTheme(newTheme);
+    });
+  }
+
+  // Function to update chart themes
+  function updateChartsTheme(theme) {
+    const charts = document.querySelectorAll('canvas');
+    charts.forEach(canvas => {
+      try {
+        const chart = Chart.getChart(canvas);
+        if (chart) {
+          chart.options.plugins.legend.labels.color = theme === 'dark' ? '#ffffff' : '#333333';
+          chart.update();
+        }
+      } catch (error) {
+        console.log('Chart update skipped:', error);
+      }
+    });
+  }
+
+  // Initialize theme
+  initializeTheme();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   const signupForm = document.getElementById('signup-form');
   const signupButton = document.getElementById('signup-button');
